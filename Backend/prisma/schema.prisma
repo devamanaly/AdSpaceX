@@ -7,11 +7,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Ad {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  price       Float
-  location    String
-  createdAt   DateTime @default(now())
+model User {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  passwordHash   String
+  phone          String
+  department     String
+  isActive       Boolean  @default(true)
+  lastLoginAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Advertiser {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  name           String
+  passwordHash   String
+  phone          String
+  lastLoginAt    DateTime?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Admin {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  name           String
+  department     String
+  phone          String
+  passwordHash   String
+  lastLoginAt    DateTime?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  adSpaces       AdSpace[]
+}
+
+model AdSpace {
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String
+  address        String
+  city           String
+  width          Int
+  height         Int
+  basePrice      Int
+  status         String   @default("available")
+
+  createdByAdmin Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  admin          Admin    @relation(fields: [createdByAdmin], references: [id])
 }
