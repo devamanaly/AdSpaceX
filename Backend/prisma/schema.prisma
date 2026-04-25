@@ -7,17 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  passwordHash   String
-  phone          String
-  department     String
-  isActive       Boolean  @default(true)
-  lastLoginAt    DateTime?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
+
 
 model Advertiser {
   id             Int      @id @default(autoincrement())
@@ -29,6 +19,10 @@ model Advertiser {
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  company     Company[]
+    ad            Ad[]
+  bid   Bid[]
+
 }
 
 model Admin {
@@ -42,11 +36,41 @@ model Admin {
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-
-  adSpaces       AdSpace[]
+  auctions        Auctions[]
+  company         Company[]
+  adSpaces       Ad_Space[]
+  adSpaceImages       Ad_Space_Images[]
 }
 
-model AdSpace {
+
+model Company {
+
+    id      Int       @id @default(autoincrement())
+    advertiser_id      Int
+    
+    companyName      String
+    phone             String
+    alternatePhone   String
+    addressLine1     String
+    city            String
+    postalCode       String
+    country         String
+    company_licence   String
+    logoUrl          String
+    industryType     String
+    verifiedByAdmin   Int?
+    verficationDate   DateTime?
+    status          String
+    rejectionReason   String?
+    createdAt         DateTime @default(now())
+    updatedAt       DateTime  @updatedAt
+    admin       Admin?     @relation(fields:[verifiedByAdmin],references:[id])
+    advertiser        Advertiser  @relation(fields:[advertiser_id], references:[id])
+  bid           Bid[]
+  ad            Ad[]
+}
+
+model Ad_Space {
   id             Int      @id @default(autoincrement())
   title          String
   description    String
@@ -56,10 +80,89 @@ model AdSpace {
   height         Int
   basePrice      Int
   status         String   @default("available")
-
   createdByAdmin Int
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-
+  adSpaceSmages   Ad_Space_Images[]
   admin          Admin    @relation(fields: [createdByAdmin], references: [id])
+  auctions        Auctions[]
+  ad              Ad[]
 }
+
+model Ad_Space_Images {
+  id    Int       @id @default(autoincrement())
+  adSpaceId     Int
+  imgUrl     String
+  thumnail    String
+  isPrimary   String
+  caption     String
+  uploadedByAdmin   Int
+  createdAt     DateTime @default(now())
+
+  adSpace   Ad_Space  @relation(fields:[adSpaceId], references:[id])
+  admin      Admin       @relation(fields:[uploadedByAdmin], references:[id])
+
+}
+
+model Auctions {
+  id    Int   @id @default(autoincrement())
+  adSpaceId     Int       
+  startingTime    DateTime                
+  endingTime      DateTime
+  displayDurationDays   Int
+  startingPrice   Int
+  currentHeighestBid    Int
+  minimumIncrement    Int
+  bidCount    Int
+  status  String
+  createdByAdmin    Int
+  cancelled_reason    String
+ createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt 
+   admin     Admin     @relation(fields:[createdByAdmin], references:[id])
+  adSpace     Ad_Space    @relation(fields:[adSpaceId],references:[id])
+  bid   Bid[]
+  ad    Ad[]
+}
+
+model Bid {
+  id   Int  @id @default(autoincrement())
+  auctionId   Int 
+  advertiserId  Int 
+  companyId   Int 
+  bidAmount   Int
+  bidTime     Int
+  status      String
+  createdAt   String
+
+  auctions     Auctions @relation(fields:[auctionId], references:[id])
+  company     Company     @relation(fields:[companyId],references:[id])
+  advertiser   Advertiser   @relation(fields:[advertiserId], references:[id])
+
+}
+
+model Ad {
+  id     Int   @id @default(autoincrement())
+  auctionId     Int
+  advertiserId  Int
+  companyId     Int
+  adSpaceId     Int
+  title       String
+  description   String
+  mediaUrl       String
+  thumnailUrl     String
+  status        String
+  createdAt       DateTime @default(now())
+
+  auctions     Auctions    @relation(fields:[auctionId], references: [id])
+  advertiser      Advertiser      @relation(fields:[advertiserId], references:[id])
+  company       Company         @relation(fields:[companyId], references:[id])
+  adSpace       Ad_Space         @relation(fields:[adSpaceId], references:[id])
+
+
+
+
+}
+
+
+
