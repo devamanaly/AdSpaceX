@@ -3,7 +3,8 @@ import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import adminRouter from "./modules/CreateAdmin/CreateAdminController";
 import advertiserRouter from "./modules/Advertiser/Advertiser.Controller";
-
+import authRouter from "./modules/auth/Auth.Controller";
+// import advertiserProfileRoute from 
 const app = express();
 const prisma = new PrismaClient();
 app.use(cors());
@@ -14,6 +15,22 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
 });
 
+// app.use("/api/profile",
+
+// )
+app.use('/api/advertiser', advertiserRouter)
+app.use('/api/admin',adminRouter)
+app.use('/api/auth', authRouter)
+app.get("/api/ads", async (req, res) => {
+  try {
+    const ads = await prisma.ad.findMany();
+    res.json(ads);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch ads" });
+  }
+});
+
+export default app;
 // Create ad
 // app.post("/api/ads", async (req, res) => {
 //   try {
@@ -28,15 +45,3 @@ app.get("/api/health", (req, res) => {
 // });
 
 // Get all ads
-app.use('/api/advertiser', advertiserRouter)
-app.use('/api/admin',adminRouter)
-app.get("/api/ads", async (req, res) => {
-  try {
-    const ads = await prisma.ad.findMany();
-    res.json(ads);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch ads" });
-  }
-});
-
-export default app;

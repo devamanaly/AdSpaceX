@@ -15,10 +15,10 @@ const prisma = new PrismaClient()
         }
     }
 
-    const isAdvertiserRegister= await FindUser("advertiser", email)
+    const isAdvertiserRegister= await FindUser(email)
 
     if(isAdvertiserRegister){
-      return  res.status(400).json({error:"advertiser is already Register"})
+      return  res.status(400).json({error:"Email is already Register"})
     }
 
 if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -49,11 +49,10 @@ if (!/^03\d{9}$/.test(String(phone))) {
       },
     });
 
-    return res.status(201).json({ message: "Admin created successfully" , data });
+    return res.status(201).json({ message: "Admin created successfully"  });
   } catch (err) {
     return res.status(500).json({ error: `Error while registering admin: ${err}` });
   }
-
 
 
 }

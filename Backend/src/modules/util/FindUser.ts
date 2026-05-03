@@ -2,32 +2,19 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const FindUser = async (role: string, email: string) => {
-    if (!email || !role) {
-        return null;
-    }
+export const FindUser = async (email: string): Promise<boolean> => {
+  if (!email) return false;
 
-    try {
-        if (role === "admin") {
-            const user = await prisma.admin.findUnique({
-                where: { email }
-            });
+  try {
+    const [admin, advertiser] = await Promise.all([
+      prisma.admin.findUnique({ where: { email } }),
+      prisma.advertiser.findUnique({ where: { email } }),
+    ]);
 
-            return user ? true : false; // true = exists
-        }
+    return !!(admin || advertiser);
 
-        else if(role === "advertiser"){
-            const user = await prisma.advertiser.findUnique({
-                where: { email }
-            });
-            return user ? true : false; // true = exists
-
-        }
-        else {
-            return null
-        }
-    } catch (error) {
-        console.error("Error finding user:", error);
-        throw error;
-    }
+  } catch (error) {
+    console.error("Error checking user:", error);
+    throw error;
+  }
 };
