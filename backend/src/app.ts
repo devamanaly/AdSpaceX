@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import adminRouter from "./modules/CreateAdmin/CreateAdminController";
+import adminRouter from "./modules/Admin/CreateAdminController";
 import advertiserRouter from "./modules/Advertiser/Advertiser.Controller";
 import authRouter from "./modules/auth/Auth.Controller";
 // import advertiserProfileRoute from 
+import companyRoutes from './modules/compnay/Company.Controller'
 const app = express();
 const prisma = new PrismaClient();
 app.use(cors());
@@ -21,7 +22,9 @@ app.get("/api/health", (req, res) => {
 app.use('/api/advertiser', advertiserRouter)
 app.use('/api/admin',adminRouter)
 app.use('/api/auth', authRouter)
+app.use("/api/company", companyRoutes)
 app.get("/api/ads", async (req, res) => {
+
   try {
     const ads = await prisma.ad.findMany();
     res.json(ads);

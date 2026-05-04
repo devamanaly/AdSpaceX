@@ -25,7 +25,7 @@ console.log(authHeader,"auth header")
     const decode = jwt.verify(token, process.env.JWT_SECRET as string);
     
     req.user = decode;
-    // console.log(req.user);
+    console.log(req.user);
     next();
   } catch (err) {
     return res.status(401).json({ error: `Invalid or expired token ${err}` });

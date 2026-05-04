@@ -1,0 +1,158 @@
+pipeline {
+    agent any
+    
+    environment {
+        // Docker image names
+        BACKEND_IMAGE = 'adspacex-backend'
+        FRONTEND_IMAGE = 'adspacex-frontend'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    }
+    
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                echo 'Cleaning workspace...'
+                cleanWs()
+            }
+        }
+        
+        stage('Checkout Code') {
+            steps {
+                echo 'Pulling latest code from GitHub...'
+                checkout scm
+                echo 'Code pulled successfully!'
+                
+                // Show what files we have
+                sh 'ls -la'
+                sh 'ls -la backend/'
+                sh 'ls -la frontend/'
+            }
+        }
+        
+        stage('Setup Environment') {
+            steps {
+                echo 'Setting up environment files...'
+                
+                // Create .env.docker for backend if not exists
+                sh '''
+                    if [ ! -f backend/.env.docker ]; then
+                        echo "Creating backend/.env.docker..."
+                        cat > backend/.env.docker << 'EOF'
+DATABASE_URL=postgresql://postgres:admin%40123@db:5432/AdSpaceX_DB
+JWT_SECRET=kNn5wXruz4g0wQD+4vmkkyr2RIV2yFo9NTUugpEBZlE=
+PORT=5000
+EOF
+                    else
+                        echo "backend/.env.docker already exists"
+                    fi
+                '''
+                
+                // Create .env for docker-compose if not exists
+                sh '''
+                    if [ ! -f .env ]; then
+                        echo "Creating .env..."
+                        cat > .env << 'EOF'
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=admin@123
+POSTGRES_DB=AdSpaceX_DB
+PORT=5000
+JWT_SECRET=kNn5wXruz4g0wQD+4vmkkyr2RIV2yFo9NTUugpEBZlE=
+EOF
+                    else
+                        echo ".env already exists"
+                    fi
+                '''
+            }
+        }
+        
+        stage('Stop Old Containers') {
+            steps {
+                echo 'Stopping old containers if any...'
+                sh '''
+                    if docker-compose ps | grep -q "Up"; then
+                        docker-compose down
+                        echo "Old containers stopped"
+                    else
+                        echo "No running containers found"
+                    fi
+                '''
+            }
+        }
+        
+        stage('Build and Deploy') {
+            steps {
+                echo 'Building and starting all services...'
+                sh '''
+                    docker-compose up --build -d
+                    echo "Waiting for services to start..."
+                    sleep 10
+                '''
+            }
+        }
+        
+        stage('Verify Deployment') {
+            steps {
+                echo 'Verifying all containers are running...'
+                
+                // Check container status
+                sh '''
+                    echo "Container Status:"
+                    docker-compose ps
+                    
+                    echo ""
+                    echo "All running containers:"
+                    docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+                '''
+                
+                // Check if backend is responding
+                sh '''
+                    echo ""
+                    echo "Checking backend health..."
+                    if curl -s -f http://localhost:5000 > /dev/null 2>&1; then
+                        echo "✓ Backend is running"
+                    else
+                        echo "⚠ Backend might still be starting (this is normal for first run)"
+                        echo "Check logs: docker-compose logs backend"
+                    fi
+                '''
+                
+                // Check if frontend is responding
+                sh '''
+                    echo ""
+                    echo "Checking frontend..."
+                    if curl -s -f http://localhost:3000 > /dev/null 2>&1; then
+                        echo "✓ Frontend is running"
+                    else
+                        echo "⚠ Frontend might still be starting"
+                    fi
+                '''
+                
+                // Show recent logs
+                sh '''
+                    echo ""
+                    echo "Recent logs:"
+                    docker-compose logs --tail=20
+                '''
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo '🎉 DEPLOYMENT SUCCESSFUL!'
+            echo 'Frontend: http://localhost:3000'
+            echo 'Backend: http://localhost:5000'
+        }
+        failure {
+            echo '❌ DEPLOYMENT FAILED!'
+            echo 'Checking logs for debugging...'
+            sh 'docker-compose logs --tail=50'
+            echo ''
+            echo 'Troubleshooting commands:'
+            echo '  docker-compose ps'
+            echo '  docker-compose logs backend'
+            echo '  docker-compose logs frontend'
+            echo '  docker-compose logs db'
+        }
+    }
+}
