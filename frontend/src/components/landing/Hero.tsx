@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Play, Building2, MapPin } from "lucide-react";
-import  Button  from "../../components/ui/button/Button";
+import  Button  from "../ui/button/Button";
 import { motion } from "framer-motion";
 
 export function Hero() {

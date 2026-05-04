@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Radio } from "lucide-react";
-import  Button  from "../../components/ui/button/Button";
+import  Button  from "../ui/button/Button";
 
 const navLinks = [
   { href: "/#how-it-works", label: "How It Works" },
