@@ -5,7 +5,10 @@ node_modules/
 dist/
 
 # Environment variables
+.env.local
+.env.docker
 .env
+
 
 # Logs
 npm-debug.log*

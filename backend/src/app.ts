@@ -6,24 +6,35 @@ import advertiserRouter from "./modules/Advertiser/Advertiser.Controller";
 import authRouter from "./modules/auth/Auth.Controller";
 // import advertiserProfileRoute from 
 import companyRoutes from './modules/compnay/Company.Controller'
+import AdSpaceRoute from './modules/AdSpace/AdSpace.Controller'
+import { ErrorHandler } from "./util/globalErrorHandler/globalErrorHandler";
 const app = express();
 const prisma = new PrismaClient();
 app.use(cors());
 app.use(express.json());
-
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is running" });
 });
 
 // app.use("/api/profile",
-
+app.get('/api/test', (req, res) => {
+  res.json({
+    message: 'Backend is working!',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 // )
 app.use('/api/advertiser', advertiserRouter)
 app.use('/api/admin',adminRouter)
 app.use('/api/auth', authRouter)
 app.use("/api/company", companyRoutes)
+app.use("/api/ad-space", AdSpaceRoute)
 app.get("/api/ads", async (req, res) => {
+
+
+  app.use(ErrorHandler);
 
   try {
     const ads = await prisma.ad.findMany();

@@ -1,7 +1,15 @@
+import NotificationBanner from "@/components/NotificationBanner/NotificationBanner";
+import { NotificationProvider } from "@/context/NotificaitionContext";
+
 export default function FullWidthPageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return(
+<NotificationProvider>
+<NotificationBanner/>
+    <div>{children}</div>;
+</NotificationProvider>
+  ) 
 }
