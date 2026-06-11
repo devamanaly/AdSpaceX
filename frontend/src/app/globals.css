@@ -166,7 +166,30 @@
   --z-index-99999: 99999;
   --z-index-999999: 999999;
 }
+/* globals.css */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.banner-enter {
+  animation: slideIn 0.4s ease-out forwards;
+}
+
+.banner-exit {
+  animation: fadeOut 0.3s ease-in forwards;
+}
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still

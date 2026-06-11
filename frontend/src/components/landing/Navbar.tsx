@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Radio } from "lucide-react";
 import  Button  from "../ui/button/Button";
+import { LogoHeader } from "../logo/logo";
 
 const navLinks = [
   { href: "/#how-it-works", label: "How It Works" },
@@ -37,9 +38,10 @@ export function Navbar() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-              <Radio className="h-6 w-6 text-white" />
-            </div>
+            {/* <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600"> */}
+              {/* <Radio className="h-6 w-6 text-white" /> */}
+              <LogoHeader width="24px" height="24px" />    
+                      {/* </div> */}
             <span className="text-xl font-bold text-gray-900 dark:text-white">
               AdSpace<span className="text-indigo-600">X</span>
             </span>
@@ -60,12 +62,12 @@ export function Navbar() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden items-center gap-3 md:flex">
-            <Link href="/advertiser/login">
+            <Link href="/signin">
               <Button variant="outline" className="text-gray-700 dark:text-gray-300">
-                Sign In
+                Sign Inss
               </Button>
             </Link>
-            <Link href="/advertiser/register">
+            <Link href="/signup">
               <Button className="bg-indigo-600 hover:bg-indigo-700">
                 Get Started
               </Button>
@@ -97,12 +99,12 @@ export function Navbar() {
               </Link>
             ))}
             <div className="flex flex-col gap-2 pt-3">
-              <Link href="/advertiser/login">
+              <Link href="/signin">
                 <Button variant="outline" className="w-full">
                   Sign In
                 </Button>
               </Link>
-              <Link href="/advertiser/register">
+              <Link href="/signup">
                 <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
                   Get Started
                 </Button>

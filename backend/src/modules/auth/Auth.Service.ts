@@ -119,7 +119,7 @@ const AuthService = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: `Internal Server Error ${err}`  });
   }
 };
 

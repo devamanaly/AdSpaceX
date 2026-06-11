@@ -4,10 +4,73 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
+import { PublicAxios } from "@/util/Axios/Axios";
+import { isValidEmail } from "@/util/EmailValidation";
+import { setUser } from "@/redux/features/userSlice";
+
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import Link from "next/link";
 import React, { useState } from "react";
-
+import Cookies from 'js-cookie';
+import { useNotification } from "@/context/NotificaitionContext";
+import { redirect, useRouter } from "next/navigation";
 export default function SignInForm() {
+  const {showNotification}= useNotification()
+  const [ data , setData ]= useState({
+    email:"",
+    password:""
+  })
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChange =(e:React.ChangeEvent<HTMLInputElement>)=>{
+    const {name, value}=e.target;
+
+    setData((prev)=>({
+      ...prev, [name]:value
+    }))
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Submit =async(e:any)=>{
+
+    e.preventDefault();
+     const isValid=isValidEmail(data.email)
+     if(!isValid){
+      console.log("email is not valid")
+      return;
+     }
+
+     try{
+      const response = await PublicAxios.post('./auth/login', data)
+      const token = response.data.data.token;
+      const user = response.data.data.user;
+      dispatch(setUser(user))
+      console.log("response", response)
+      // alert(user)
+
+      showNotification("user is login","success")
+
+      Cookies.set("token",token,{
+        expires:1,
+        secure:true,
+        sameSite:"strict"
+      })
+      router.push('/')
+      // redirect('/')
+
+     }catch(err){
+            // if(err.status){
+            console.log("unathoruzed",err)
+      showNotification(`login errror `,"error")
+
+     }
+
+    
+    
+
+  }
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   return (
@@ -31,7 +94,9 @@ export default function SignInForm() {
               Enter your email and password to sign in!
             </p>
           </div>
+          
           <div>
+          {/*
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
               <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                 <svg
@@ -73,8 +138,8 @@ export default function SignInForm() {
                 </svg>
                 Sign in with X
               </button>
-            </div>
-            <div className="relative py-3 sm:py-5">
+            </div> */}
+            {/* <div className="relative py-3 sm:py-5">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
               </div>
@@ -83,14 +148,14 @@ export default function SignInForm() {
                   Or
                 </span>
               </div>
-            </div>
-            <form>
+            </div> */}
+            <form onSubmit={Submit}>
               <div className="space-y-6">
                 <div>
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="info@gmail.com" type="email" />
+                  <Input placeholder="info@gmail.com"  type="email" name="email" onChange={handleChange} value={data.email} />
                 </div>
                 <div>
                   <Label>
@@ -100,6 +165,9 @@ export default function SignInForm() {
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
+                      name="password"
+                      onChange={handleChange}
+                      value={data.password}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
