@@ -51,7 +51,7 @@ export const CreateAdminService = async (req: Request, res: Response) => {
         name,
         email,
         phone: String(phone),
-        hashPassword: hashedPassword, // ✅ matches schema after `prisma generate`
+        hashPassword: hashedPassword, 
         department,
         isActive: true,
       },

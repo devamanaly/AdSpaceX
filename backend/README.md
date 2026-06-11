@@ -12,23 +12,23 @@ auth/create/advertiser
 ADMIN - AD SPACES (7 APIs)
 ├── POST   /api/admin/ad-spaces
 ├── GET    /api/admin/ad-spaces
+├── GET    /api/admin/ad-spaces/[id]
 
 
-
+ADMIN - COMPANIES (3 APIs)
+├── GET    /api/admin/companies
 
 AUTH (6 APIs)
 ├── PUT    /api/auth/change-password  (medium)
 
 ADMIN - AD SPACES (7 APIs)
 
-├── GET    /api/admin/ad-spaces/[id]
-├── PUT    /api/admin/ad-spaces/[id]
+├── PATCH    /api/admin/ad-spaces/[id]
 ├── DELETE /api/admin/ad-spaces/[id]
 ├── POST   /api/admin/ad-spaces/[id]/images
 └── DELETE /api/admin/ad-spaces/images/[id]
 
 ADMIN - COMPANIES (3 APIs)
-├── GET    /api/admin/companies
 ├── GET    /api/admin/companies/[id]
 └── PUT    /api/admin/companies/[id]/verify
 
