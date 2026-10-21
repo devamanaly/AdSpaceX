@@ -3,6 +3,7 @@ import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import adminRouter from "./modules/Admin/CreateAdminController";
 import advertiserRouter from "./modules/Advertiser/Advertiser.Controller";
+import profileRouter from "./modules/profile/Profile.Controller";
 import authRouter from "./modules/auth/Auth.Controller";
 // import advertiserProfileRoute from 
 import companyRoutes from './modules/compnay/Company.Controller'
@@ -26,12 +27,13 @@ app.get('/api/test', (req, res) => {
   });
 });
 // )
-app.use('/api/advertiser', advertiserRouter)
-app.use('/api/admin',adminRouter)
-app.use('/api/auth', authRouter)
-app.use("/api/company", companyRoutes)
-app.use("/api/ad-space", AdSpaceRoute)
-app.get("/api/ads", async (req, res) => {
+app.use('/api/v1/advertiser', advertiserRouter)
+app.use('/api/v1/admin',adminRouter)
+app.use('/api/v1/auth', authRouter)
+app.use("/api/v1/company", companyRoutes)
+app.use("/api/v1/ad-space", AdSpaceRoute)
+app.use("/api/v1/user", profileRouter)
+app.get("/api/v1/ads", async (req, res) => {
 
 
   app.use(ErrorHandler);

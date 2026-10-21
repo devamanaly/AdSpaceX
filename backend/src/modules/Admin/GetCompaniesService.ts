@@ -5,8 +5,9 @@ import { PrismaClient } from "@prisma/client";
 export const GetCompaniesService = async (req: Request, res: Response) => {
   const prisma = new PrismaClient();
   const user = (req as any).user;
-  if (!user && user.role !== "admin") {
-    return res.status(400).json({ error: " Log in as admin " });
+  console.log(user,"rolessss")
+  if (!user || user.role !== "admin") {
+    return res.status(403).json({ error: "Log in as admin" });
   }
   const page = Number(req.query.page) || 1;
   const limit = 15;
@@ -34,8 +35,8 @@ export const GetCompanyByIdService  = async(req:Request, res:Response) => {
 
   const {id} = req.params;
   const companyId =Number(id);
-  if (!user && user.role !== "admin") {
-    return res.status(400).json({ error: " Log in as admin " });
+  if (!user || user.role !== "admin") {
+    return res.status(403).json({ error: " Log in as admin " });
   }
   if (!id){
     return res.status(400).json({error:"not user"})
