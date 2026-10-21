@@ -21,6 +21,13 @@ ADMIN - COMPANIES (3 APIs)
 AUTH (6 APIs)
 ├── PUT    /api/auth/change-password  (medium)
 
+
+ADVERTISER - COMPANY (3 APIs)
+├── POST   /api/advertiser/company
+├── GET    /api/advertiser/company
+
+
+ not completed
 ADMIN - AD SPACES (7 APIs)
 
 ├── PATCH    /api/admin/ad-spaces/[id]
@@ -33,8 +40,7 @@ ADMIN - COMPANIES (3 APIs)
 └── PUT    /api/admin/companies/[id]/verify
 
 ADVERTISER - COMPANY (3 APIs)
-├── POST   /api/advertiser/company
-├── GET    /api/advertiser/company
+
 └── PUT    /api/advertiser/company
 
 ADMIN - AUCTIONS (4 APIs)
