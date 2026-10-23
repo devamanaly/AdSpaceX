@@ -3,6 +3,7 @@ import { error } from "node:console";
 import { FindUser } from "../util/FindUser";
 import { hashPassword } from "../util/Bycriptpassword";
 import { Prisma, PrismaClient } from "@prisma/client";
+import { emailService } from "../Email/Email.service";
 export const AdvertiserService = async (req: Request, res: Response) => {
   const prisma = new PrismaClient();
   const { email, name, password, phone, confirmPassword } = req.body;
@@ -49,6 +50,23 @@ export const AdvertiserService = async (req: Request, res: Response) => {
         isVerifiedByAdmin: false,
       },
     });
+    try {
+      await emailService.sendTemplate({
+        to: email,
+        template: "register-success",
+        subject: "Welcome to AdSpaceX - Registration Successful",
+        data: {
+          fullName: name,
+          email: email,
+          phone: phone,
+          dashboardUrl: "http://localhost:3000/advertiser/dashboard",
+        },
+      });
+
+      console.log("Welcome email sent successfully");
+    } catch (emailError) {
+      console.error("Failed to send welcome email:", emailError);
+    }
 
     return res.status(201).json({ message: "Admin created successfully" });
   } catch (err) {
