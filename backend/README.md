@@ -13,6 +13,9 @@ ADMIN - AD SPACES (7 APIs)
 ├── POST   /api/admin/ad-spaces
 ├── GET    /api/admin/ad-spaces
 ├── GET    /api/admin/ad-spaces/[id]
+├── PATCH    /api/ad-spaces/[id]
+├── DELETE /api/admin/ad-spaces/[id]
+└── DELETE /api/admin/ad-spaces/images/[id]
 
 
 ADMIN - COMPANIES (3 APIs)
@@ -30,10 +33,7 @@ ADVERTISER - COMPANY (3 APIs)
  not completed
 ADMIN - AD SPACES (7 APIs)
 
-├── PATCH    /api/admin/ad-spaces/[id]
-├── DELETE /api/admin/ad-spaces/[id]
-├── POST   /api/admin/ad-spaces/[id]/images
-└── DELETE /api/admin/ad-spaces/images/[id]
+
 
 ADMIN - COMPANIES (3 APIs)
 ├── GET    /api/admin/companies/[id]
