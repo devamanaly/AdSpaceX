@@ -118,7 +118,7 @@ model Auctions {
   bidCount    Int
   status  String
   createdByAdmin    Int
-  cancelled_reason    String
+  cancelled_reason    String?
  createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt 
    admin     Admin     @relation(fields:[createdByAdmin], references:[id])
