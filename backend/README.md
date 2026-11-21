@@ -29,8 +29,13 @@ ADVERTISER - COMPANY (3 APIs)
 ├── POST   /api/advertiser/company
 ├── GET    /api/advertiser/company
 
+ ADMIN - AUCTIONS (4 APIs)
+├── POST   /api/admin/auctions
+├── GET    /api/admin/auctions
 
- not completed
+
+
+<<<<<<<<<<<<<<<<<<<< not completed  >>>>>>>>>>>>>>>>>>>
 ADMIN - AD SPACES (7 APIs)
 
 
@@ -44,7 +49,6 @@ ADVERTISER - COMPANY (3 APIs)
 └── PUT    /api/advertiser/company
 
 ADMIN - AUCTIONS (4 APIs)
-├── POST   /api/admin/auctions
 ├── GET    /api/admin/auctions
 ├── GET    /api/admin/auctions/[id]
 └── PUT    /api/admin/auctions/[id]/close

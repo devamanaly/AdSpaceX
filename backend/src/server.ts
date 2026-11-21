@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import app from "./app";
+import { startAuctionScheduler } from "./jobs/auctionScheduler";
 
 const PORT = process.env.PORT || 5001;
 
@@ -26,6 +27,7 @@ console.log("📌 Time:", new Date().toISOString());
 // 🔥 Start server
 const server = app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
+  startAuctionScheduler();
 });
 
 // 🔥 Detect server-level errors
